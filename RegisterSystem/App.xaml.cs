@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace RegisterSystem;
 
@@ -40,18 +41,90 @@ public partial class App : Application
             return true;
         }
 
-        string reason = RegisterService.RegisterStatus switch
+        string machineCode = RegisterService.GetMachineCode();
+        if (RegisterService.RegisterStatus == RegisterStatus.超期)
         {
-            RegisterStatus.超期 => "授权已到期，请联系供应商续期。",
-            _ => "程序未授权，请先完成注册。",
-        };
+            ShowExpiredDialogWithCopy(machineCode);
+            return false;
+        }
 
         MessageBox.Show(
-            $"{reason}\n\n机器码：{RegisterService.GetMachineCode()}",
+            $"程序未授权，请先完成注册。\n\n机器码：{machineCode}",
             "授权校验失败",
             MessageBoxButton.OK,
             MessageBoxImage.Warning);
 
         return false;
+    }
+
+    private static void ShowExpiredDialogWithCopy(string machineCode)
+    {
+        Window dialog = new()
+        {
+            Title = "授权已到期",
+            Width = 460,
+            Height = 220,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            ResizeMode = ResizeMode.NoResize,
+            WindowStyle = WindowStyle.ToolWindow,
+        };
+
+        Grid layout = new() { Margin = new Thickness(16) };
+        layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        layout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+        TextBlock text = new()
+        {
+            Text = "授权已到期，请联系供应商续期。",
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8),
+        };
+        Grid.SetRow(text, 0);
+
+        TextBlock machineCodeText = new()
+        {
+            Text = $"机器码：{machineCode}",
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8),
+        };
+        Grid.SetRow(machineCodeText, 1);
+
+        StackPanel actions = new()
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        Grid.SetRow(actions, 3);
+
+        Button copyButton = new()
+        {
+            Content = "复制机器码",
+            Width = 100,
+            Margin = new Thickness(0, 0, 8, 0),
+        };
+        copyButton.Click += (_, _) =>
+        {
+            Clipboard.SetText(machineCode);
+            MessageBox.Show("机器码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            dialog.Close();
+        };
+
+        Button closeButton = new()
+        {
+            Content = "关闭",
+            Width = 80,
+        };
+        closeButton.Click += (_, _) => dialog.Close();
+
+        actions.Children.Add(copyButton);
+        actions.Children.Add(closeButton);
+
+        layout.Children.Add(text);
+        layout.Children.Add(machineCodeText);
+        layout.Children.Add(actions);
+        dialog.Content = layout;
+        dialog.ShowDialog();
     }
 }
