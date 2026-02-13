@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "zM0GO7KiksA=",
+  "dgSpecHash": "xjNyRuAUkCw=",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\RegisterSystem\\RegisterSystem.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\system.management\\8.0.0\\system.management.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
