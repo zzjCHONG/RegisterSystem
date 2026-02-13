@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1003DB51-DCA9-402C-AEF8-D48D51F2691B}|RegisterSystem\\RegisterSystem.csproj|c:\\users\\administrator\\desktop\\registersystem\\registersystem\\registerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1003DB51-DCA9-402C-AEF8-D48D51F2691B}|RegisterSystem\\RegisterSystem.csproj|solutionrelative:registersystem\\registerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1003DB51-DCA9-402C-AEF8-D48D51F2691B}|RegisterSystem\\RegisterSystem.csproj|c:\\users\\administrator\\desktop\\registersystem\\registersystem\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{1003DB51-DCA9-402C-AEF8-D48D51F2691B}|RegisterSystem\\RegisterSystem.csproj|solutionrelative:registersystem\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
@@ -39,6 +43,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "RegisterService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\RegisterSystem\\RegisterService.cs",
+              "RelativeDocumentMoniker": "RegisterSystem\\RegisterService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\RegisterSystem\\RegisterService.cs",
+              "RelativeToolTip": "RegisterSystem\\RegisterService.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAQwJIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-13T03:11:08.668Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\RegisterSystem\\MainWindow.xaml",
               "RelativeDocumentMoniker": "RegisterSystem\\MainWindow.xaml",
@@ -50,7 +67,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\RegisterSystem\\RegisterSystem\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "RegisterSystem\\MainWindow.xaml.cs",
@@ -58,8 +75,7 @@
               "RelativeToolTip": "RegisterSystem\\MainWindow.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-13T02:37:56.7Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-13T02:37:56.7Z"
             }
           ]
         }
