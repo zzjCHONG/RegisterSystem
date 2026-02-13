@@ -340,6 +340,16 @@ public static class RegisterService
         return Convert.TryFromBase64String(input, new Span<byte>(new byte[input.Length]), out _);
     }
 
+    private static bool IsBase64(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input) || input.Length % 4 != 0)
+        {
+            return false;
+        }
+
+        return Convert.TryFromBase64String(input, new Span<byte>(new byte[input.Length]), out _);
+    }
+
     private static string GetDiskVolumeSerialNumber()
     {
         try
