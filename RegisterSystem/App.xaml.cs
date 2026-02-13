@@ -42,26 +42,20 @@ public partial class App : Application
         }
 
         string machineCode = RegisterService.GetMachineCode();
-        if (RegisterService.RegisterStatus == RegisterStatus.超期)
-        {
-            ShowExpiredDialogWithCopy(machineCode);
-            return false;
-        }
+        string title = RegisterService.RegisterStatus == RegisterStatus.超期 ? "授权已到期" : "授权校验失败";
+        string message = RegisterService.RegisterStatus == RegisterStatus.超期
+            ? "授权已到期，请联系供应商续期。"
+            : "程序未授权，请先完成注册。";
 
-        MessageBox.Show(
-            $"程序未授权，请先完成注册。\n\n机器码：{machineCode}",
-            "授权校验失败",
-            MessageBoxButton.OK,
-            MessageBoxImage.Warning);
-
+        ShowLicenseDialogWithCopy(title, message, machineCode);
         return false;
     }
 
-    private static void ShowExpiredDialogWithCopy(string machineCode)
+    private static void ShowLicenseDialogWithCopy(string title, string message, string machineCode)
     {
         Window dialog = new()
         {
-            Title = "授权已到期",
+            Title = title,
             Width = 460,
             Height = 220,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -77,7 +71,7 @@ public partial class App : Application
 
         TextBlock text = new()
         {
-            Text = "授权已到期，请联系供应商续期。",
+            Text = message,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 8),
         };
