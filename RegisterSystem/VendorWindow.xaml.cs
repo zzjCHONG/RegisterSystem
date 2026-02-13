@@ -31,6 +31,19 @@ public partial class VendorWindow : Window
         GeneratedCodeTextBox.Text = payload.ToCompactString();
     }
 
+
+    private void CopyGeneratedCodeButton_Click(object sender, RoutedEventArgs e)
+    {
+        string registerCode = GeneratedCodeTextBox.Text.Trim();
+        if (string.IsNullOrWhiteSpace(registerCode))
+        {
+            MessageBox.Show("请先生成注册码。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        Clipboard.SetText(registerCode);
+        MessageBox.Show("注册码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
     private void LicenseTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DateTime currentDate = CurrentDatePicker.SelectedDate ?? DateTime.Today;

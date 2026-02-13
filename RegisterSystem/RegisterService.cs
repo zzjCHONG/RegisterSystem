@@ -59,13 +59,19 @@ public static class RegisterService
     public static string Deadline { get; private set; } = string.Empty;
     public static string LastDate { get; private set; } = string.Empty;
 
-    public static string RegisterFilePath => Path.Combine(
+    private static readonly Lazy<string> MachineCodeCache = new(ResolveMachineCode);
+    private static readonly Lazy<string> RegisterFilePathCache = new(() => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "RegisterSystem",
         "RegisterFile",
-        $"{GetMachineCode()}.json");
+        $"{MachineCodeCache.Value}.json"));
 
-    public static string GetMachineCode()
+    public static string RegisterFilePath => RegisterFilePathCache.Value;
+
+    public static string GetMachineCode() => MachineCodeCache.Value;
+
+
+    private static string ResolveMachineCode()
     {
         string disk = GetDiskVolumeSerialNumber();
         string cpu = GetCpuId();
@@ -78,7 +84,6 @@ public static class RegisterService
 
         return joined[..24];
     }
-
     public static string GetRegisterCode(string machineId)
     {
         int[] intCode = new int[127];

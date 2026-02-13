@@ -10,16 +10,36 @@ public partial class CustomerWindow : Window
     public CustomerWindow()
     {
         InitializeComponent();
-        RefreshView();
+        _ = RefreshViewAsync();
     }
 
-    private void ActivateButton_Click(object sender, RoutedEventArgs e)
+    private async void ActivateButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!RegisterService.TryActivateFromRaw(EnrollCodeTextBox.Text, out string error))
+        ActivateButton.IsEnabled = false;
+        try
         {
-            MessageBox.Show(error, "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            string raw = EnrollCodeTextBox.Text;
+            (bool ok, string error) = await Task.Run(() =>
+            {
+                bool success = RegisterService.TryActivateFromRaw(raw, out string msg);
+                return (success, msg);
+            });
+
+            if (!ok)
+            {
+                MessageBox.Show(error, "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            MessageBox.Show("授权成功。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            EnrollCodeTextBox.Clear();
+            await RefreshViewAsync();
         }
+        finally
+        {
+            ActivateButton.IsEnabled = true;
+        }
+    }
 
         MessageBox.Show("授权成功。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         EnrollCodeTextBox.Clear();
@@ -34,7 +54,7 @@ public partial class CustomerWindow : Window
 
     private void RefreshView()
     {
-        RegisterService.ReadEnrollFile();
+        await Task.Run(RegisterService.ReadEnrollFile);
         CurrentDateTextBox.Text = DateTime.Now.ToString("yyyy年 M月d日");
         MachineCodeTextBox.Text = RegisterService.GetMachineCode();
         StatusTextBox.Text = RegisterService.RegisterStatus.ToString();
