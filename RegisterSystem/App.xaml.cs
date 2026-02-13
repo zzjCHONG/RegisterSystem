@@ -4,13 +4,14 @@ namespace RegisterSystem;
 
 public partial class App : Application
 {
+    // true: 启动供应商界面；false: 启动客户界面
+    private const bool StartVendorWindow = false;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
-        bool vendorMode = e.Args.Any(arg => string.Equals(arg, "--vendor", StringComparison.OrdinalIgnoreCase));
-
-        Window startupWindow = vendorMode ? new VendorWindow() : new CustomerWindow();
+        Window startupWindow = StartVendorWindow ? new VendorWindow() : new CustomerWindow();
         MainWindow = startupWindow;
         startupWindow.Show();
     }

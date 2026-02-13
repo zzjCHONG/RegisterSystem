@@ -52,8 +52,8 @@
                 <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,0,8,8" VerticalAlignment="Center" Text="生成结果"/>
                 <TextBox x:Name="GeneratedCodeTextBox" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Height="110" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
 
-                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="启动参数"/>
-                <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="供应商端请用 --vendor 参数启动程序"/>
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="启动方式"/>
+                <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="在 App.xaml.cs 中将 StartVendorWindow 设为 true 可直接打开本界面"/>
             </Grid>
         </GroupBox>
     </Grid>
