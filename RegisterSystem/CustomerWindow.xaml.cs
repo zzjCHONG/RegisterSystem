@@ -41,13 +41,18 @@ public partial class CustomerWindow : Window
         }
     }
 
+        MessageBox.Show("授权成功。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        EnrollCodeTextBox.Clear();
+        RefreshView();
+    }
+
     private void CopyMachineCodeButton_Click(object sender, RoutedEventArgs e)
     {
         Clipboard.SetText(MachineCodeTextBox.Text);
         MessageBox.Show("机器码已复制，可发送给供应商生成注册码。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
-    private async Task RefreshViewAsync()
+    private void RefreshView()
     {
         await Task.Run(RegisterService.ReadEnrollFile);
         CurrentDateTextBox.Text = DateTime.Now.ToString("yyyy年 M月d日");

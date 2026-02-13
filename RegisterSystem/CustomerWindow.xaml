@@ -41,7 +41,7 @@
 
                 <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Top" Text="注册码"/>
                 <TextBox x:Name="EnrollCodeTextBox" Grid.Row="5" Grid.Column="1" Height="140" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
-                <Button Grid.Row="5" Grid.Column="2" Margin="8,0,0,0" Height="54" VerticalAlignment="Top" Content="授权&#x0a;注册" Background="#FFF6D40D" x:Name="ActivateButton" Click="ActivateButton_Click"/>
+                <Button Grid.Row="5" Grid.Column="2" Margin="8,0,0,0" Height="54" VerticalAlignment="Top" Content="授权&#x0a;注册" Background="#FFF6D40D" Click="ActivateButton_Click"/>
             </Grid>
         </Border>
     </Grid>
