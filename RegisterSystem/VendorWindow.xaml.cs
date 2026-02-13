@@ -41,8 +41,15 @@ public partial class VendorWindow : Window
             return;
         }
 
-        Clipboard.SetText(registerCode);
-        MessageBox.Show("注册码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        try
+        {
+            Clipboard.SetText(registerCode);
+            MessageBox.Show("注册码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
     }
     private void LicenseTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

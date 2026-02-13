@@ -100,8 +100,16 @@ public partial class App : Application
         };
         copyButton.Click += (_, _) =>
         {
-            Clipboard.SetText(machineCode);
-            MessageBox.Show("机器码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            try
+            {
+                Clipboard.SetText(machineCode);
+                MessageBox.Show("机器码已复制。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             dialog.Close();
         };
 
