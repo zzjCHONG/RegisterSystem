@@ -1,40 +1,44 @@
-﻿<Window x:Class="RegisterSystem.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="注册系统入口"
-        Height="230"
-        Width="360"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        Background="#FFEFEFEF">
+﻿<Window
+    x:Class="RegisterSystem.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="注册系统入口"
+    Width="360"
+    Height="230"
+    Background="#FFEFEFEF"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen">
     <Grid Margin="16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="请选择进入界面"
-                   FontSize="20"
-                   FontWeight="SemiBold"
-                   HorizontalAlignment="Center"/>
+        <TextBlock
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            FontSize="20"
+            FontWeight="SemiBold"
+            Text="请选择进入界面" />
 
-        <Button Grid.Row="2"
-                Height="44"
-                Content="客户注册界面"
-                Background="#FF6DA0FF"
-                Foreground="White"
-                FontSize="16"
-                Click="OpenCustomerButton_Click"/>
+        <Button
+            Grid.Row="2"
+            Height="44"
+            Background="#FF6DA0FF"
+            Click="OpenCustomerButton_Click"
+            Content="客户注册界面"
+            FontSize="16"
+            Foreground="White" />
 
-        <Button Grid.Row="4"
-                Height="44"
-                Content="供应商生成界面"
-                Background="#FFF6D40D"
-                FontSize="16"
-                Click="OpenVendorButton_Click"/>
+        <Button
+            Grid.Row="4"
+            Height="44"
+            Background="#FFF6D40D"
+            Click="OpenVendorButton_Click"
+            Content="供应商生成界面"
+            FontSize="16" />
     </Grid>
 </Window>
