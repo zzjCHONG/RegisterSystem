@@ -1,0 +1,40 @@
+﻿<Window x:Class="RegisterSystem.CustomerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="客户注册界面"
+        Height="360"
+        Width="620"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#FFEFEFEF">
+    <Grid Margin="12">
+        <Border BorderBrush="#FF9A9A9A" BorderThickness="1" Padding="10" Background="WhiteSmoke">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="85"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,8,8" VerticalAlignment="Center" Text="注册状态" FontSize="16"/>
+                <TextBox x:Name="StatusTextBox" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" IsReadOnly="True" FontSize="16"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,8,8" VerticalAlignment="Center" Text="当前日期"/>
+                <TextBox x:Name="CurrentDateTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" IsReadOnly="True"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,8,8" VerticalAlignment="Center" Text="机器码"/>
+                <TextBox x:Name="MachineCodeTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" IsReadOnly="True"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Top" Text="注册码"/>
+                <TextBox x:Name="EnrollCodeTextBox" Grid.Row="3" Grid.Column="1" Height="120" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
+                <Button Grid.Row="3" Grid.Column="2" Margin="8,0,0,0" Height="54" VerticalAlignment="Top" Content="授权&#x0a;注册" Background="#FFF6D40D" Click="ActivateButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
