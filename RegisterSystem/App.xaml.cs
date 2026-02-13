@@ -1,14 +1,18 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
-namespace RegisterSystem
+namespace RegisterSystem;
+
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-    }
+    // true: 启动供应商界面；false: 启动客户界面
+    private const bool StartVendorWindow = false;
 
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        Window startupWindow = StartVendorWindow ? new VendorWindow() : new CustomerWindow();
+        MainWindow = startupWindow;
+        startupWindow.Show();
+    }
 }
