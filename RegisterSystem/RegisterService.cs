@@ -3,6 +3,7 @@ using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Globalization;
 
 namespace RegisterSystem;
 
@@ -51,6 +52,7 @@ public static class RegisterService
 {
     private static readonly byte[] Keys = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
     private const string DesKey = "A1B2C3D4";
+    private const string DateFormat = "yyyy/MM/dd";
 
     public static RegisterStatus RegisterStatus { get; private set; } = RegisterStatus.未注册;
     public static string MachineId { get; private set; } = string.Empty;
@@ -122,15 +124,18 @@ public static class RegisterService
     public static string GetRegisterCode() => GetRegisterCode(GetMachineCode());
 
     public static EnrollPayload BuildPayload(DateTime deadlineDate, DateTime? currentDate = null)
+        => BuildPayload(GetMachineCode(), deadlineDate, currentDate);
+
+    public static EnrollPayload BuildPayload(string machineId, DateTime deadlineDate, DateTime? currentDate = null)
     {
-        string machineId = GetMachineCode();
-        string today = (currentDate ?? DateTime.Now).ToString("yyyy/MM/dd");
+        string machine = string.IsNullOrWhiteSpace(machineId) ? GetMachineCode() : machineId.Trim();
+        string today = (currentDate ?? DateTime.Now).ToString(DateFormat);
         return new EnrollPayload
         {
-            MachineIdEncrypted = EncryptDES(machineId),
+            MachineIdEncrypted = EncryptDES(machine),
             LastDateEncrypted = EncryptDES(today),
-            DeadlineEncrypted = EncryptDES(deadlineDate.ToString("yyyy/MM/dd")),
-            EnrollCode = GetRegisterCode(machineId),
+            DeadlineEncrypted = EncryptDES(deadlineDate.ToString(DateFormat)),
+            EnrollCode = GetRegisterCode(machine),
         };
     }
 
@@ -162,7 +167,12 @@ public static class RegisterService
         }
 
         string currentMachineId = GetMachineCode();
-        string machineId = DecryptDES(payload.MachineIdEncrypted);
+        if (!TryDecryptDES(payload.MachineIdEncrypted, out string machineId))
+        {
+            error = "机器码数据无效。";
+            return false;
+        }
+
         if (!string.Equals(machineId, currentMachineId, StringComparison.Ordinal))
         {
             error = "机器码不匹配，无法注册。";
@@ -175,14 +185,25 @@ public static class RegisterService
             return false;
         }
 
-        string deadline = DecryptDES(payload.DeadlineEncrypted);
-        if (!DateTime.TryParse(deadline, out _))
+        if (!TryDecryptDES(payload.DeadlineEncrypted, out string deadline))
+        {
+            error = "使用日期数据无效。";
+            return false;
+        }
+
+        if (!DateTime.TryParseExact(deadline, DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadlineDate))
         {
             error = "使用日期格式错误。";
             return false;
         }
 
-        payload.LastDateEncrypted = EncryptDES(DateTime.Now.ToString("yyyy/MM/dd"));
+        if (deadlineDate.Date < DateTime.Today)
+        {
+            error = "授权已过期，无法激活。";
+            return false;
+        }
+
+        payload.LastDateEncrypted = EncryptDES(DateTime.Now.ToString(DateFormat));
         return SaveEnrollPayload(payload, out error);
     }
 
@@ -206,19 +227,33 @@ public static class RegisterService
                 return;
             }
 
-            string machineId = DecryptDES(payload.MachineIdEncrypted);
+            if (!TryDecryptDES(payload.MachineIdEncrypted, out string machineId))
+            {
+                return;
+            }
+
             if (!string.Equals(machineId, MachineId, StringComparison.Ordinal))
             {
                 return;
             }
 
-            LastDate = DecryptDES(payload.LastDateEncrypted);
-            Deadline = DecryptDES(payload.DeadlineEncrypted);
+            if (!TryDecryptDES(payload.LastDateEncrypted, out string lastDateRaw)
+                || !TryDecryptDES(payload.DeadlineEncrypted, out string deadlineRaw))
+            {
+                return;
+            }
+
+            LastDate = lastDateRaw;
+            Deadline = deadlineRaw;
+
+            if (!DateTime.TryParseExact(LastDate, DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastDate)
+                || !DateTime.TryParseExact(Deadline, DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadlineDate))
+            {
+                return;
+            }
 
             DateTime now = DateTime.Today;
-            DateTime lastDate = DateTime.Parse(LastDate);
-            DateTime deadlineDate = DateTime.Parse(Deadline);
-            bool isTrial = deadlineDate < DateTime.Parse("2122/12/31");
+            bool isTrial = deadlineDate < DateTime.ParseExact("2122/12/31", DateFormat, CultureInfo.InvariantCulture);
 
             if (now < lastDate)
             {
@@ -226,7 +261,7 @@ public static class RegisterService
                 return;
             }
 
-            payload.LastDateEncrypted = EncryptDES(now.ToString("yyyy/MM/dd"));
+            payload.LastDateEncrypted = EncryptDES(now.ToString(DateFormat));
             SaveEnrollPayload(payload, out _);
 
             if (now >= deadlineDate)
@@ -266,8 +301,19 @@ public static class RegisterService
 
     public static string DecryptDES(string cipherText)
     {
+        return TryDecryptDES(cipherText, out string plainText) ? plainText : cipherText;
+    }
+
+    public static bool TryDecryptDES(string cipherText, out string plainText)
+    {
+        plainText = string.Empty;
         try
         {
+            if (!IsBase64(cipherText))
+            {
+                return false;
+            }
+
             byte[] rgbKey = Encoding.UTF8.GetBytes(DesKey[..8]);
             byte[] inputBytes = Convert.FromBase64String(cipherText);
             using DESCryptoServiceProvider provider = new();
@@ -275,12 +321,23 @@ public static class RegisterService
             using CryptoStream cs = new(ms, provider.CreateDecryptor(rgbKey, Keys), CryptoStreamMode.Write);
             cs.Write(inputBytes, 0, inputBytes.Length);
             cs.FlushFinalBlock();
-            return Encoding.UTF8.GetString(ms.ToArray());
+            plainText = Encoding.UTF8.GetString(ms.ToArray());
+            return true;
         }
         catch
         {
-            return cipherText;
+            return false;
         }
+    }
+
+    private static bool IsBase64(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input) || input.Length % 4 != 0)
+        {
+            return false;
+        }
+
+        return Convert.TryFromBase64String(input, new Span<byte>(new byte[input.Length]), out _);
     }
 
     private static string GetDiskVolumeSerialNumber()
