@@ -124,15 +124,18 @@ public static class RegisterService
     public static string GetRegisterCode() => GetRegisterCode(GetMachineCode());
 
     public static EnrollPayload BuildPayload(DateTime deadlineDate, DateTime? currentDate = null)
+        => BuildPayload(GetMachineCode(), deadlineDate, currentDate);
+
+    public static EnrollPayload BuildPayload(string machineId, DateTime deadlineDate, DateTime? currentDate = null)
     {
-        string machineId = GetMachineCode();
+        string machine = string.IsNullOrWhiteSpace(machineId) ? GetMachineCode() : machineId.Trim();
         string today = (currentDate ?? DateTime.Now).ToString(DateFormat);
         return new EnrollPayload
         {
-            MachineIdEncrypted = EncryptDES(machineId),
+            MachineIdEncrypted = EncryptDES(machine),
             LastDateEncrypted = EncryptDES(today),
             DeadlineEncrypted = EncryptDES(deadlineDate.ToString(DateFormat)),
-            EnrollCode = GetRegisterCode(machineId),
+            EnrollCode = GetRegisterCode(machine),
         };
     }
 
@@ -325,6 +328,16 @@ public static class RegisterService
         {
             return false;
         }
+    }
+
+    private static bool IsBase64(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input) || input.Length % 4 != 0)
+        {
+            return false;
+        }
+
+        return Convert.TryFromBase64String(input, new Span<byte>(new byte[input.Length]), out _);
     }
 
     private static bool IsBase64(string input)
