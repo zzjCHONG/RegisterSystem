@@ -120,10 +120,10 @@ public static class RegisterService
 
     public static string GetRegisterCode() => GetRegisterCode(GetMachineCode());
 
-    public static EnrollPayload BuildPayload(DateTime deadlineDate)
+    public static EnrollPayload BuildPayload(DateTime deadlineDate, DateTime? currentDate = null)
     {
         string machineId = GetMachineCode();
-        string today = DateTime.Now.ToString("yyyy/MM/dd");
+        string today = (currentDate ?? DateTime.Now).ToString("yyyy/MM/dd");
         return new EnrollPayload
         {
             MachineIdEncrypted = EncryptDES(machineId),
